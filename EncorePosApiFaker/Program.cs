@@ -62,7 +62,7 @@ var tokenBody = new
 
 request.Content = new StringContent(JsonSerializer.Serialize(tokenBody), Encoding.UTF8, MediaTypeNames.Application.Json);
 
-var response = await client.SendAsync(request);
+using var response = await client.SendAsync(request);
 var body = await response.Content.ReadFromJsonAsync<TokenDto>();
 var token = body!.Token;
 
@@ -74,7 +74,7 @@ foreach (var item in records)
     req.Headers.Add("Authorization", $"Bearer {token}");
     req.Content = new StringContent(JsonSerializer.Serialize(item), Encoding.UTF8, MediaTypeNames.Application.Json);
 
-    var res = await client.SendAsync(req);
+    using var res = await client.SendAsync(req);
     var bod = await res.Content.ReadFromJsonAsync<ApiResponseDto>();
     Console.WriteLine(bod);
     if (bod is { FaultyParameters.Count: > 0 })
